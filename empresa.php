@@ -47,87 +47,79 @@ class Empresa{
     // __toString
 
     public function __toString() {
-        $infoClientes = "";
-        $clientes = $this->getColeccionClientes();
-        for ($i = 0; $i < count($clientes); $i++) {
-            $infoClientes .= $clientes[$i] . "\n";
-        }
-        if ($infoClientes == "") {
-            $infoClientes = "No hay clientes registrados.\n";
+        $info = "════════════════ EMPRESA ════════════════\n";
+        $info .= "🏢 Denominación: " . $this->getDenominacion() . "\n";
+        $info .= "📍 Dirección:    " . $this->getDireccion() . "\n";
+        $info .= "════════════════════════════════════════\n\n";
+    
+        $info .= "📋 CLIENTES:\n";
+        foreach ($this->getColeccionClientes() as $cliente) {
+            $info .= $cliente . "\n";
         }
     
-        $infoMotos = "";
-        $motos = $this->getColeccionMotos();
-        for ($i = 0; $i < count($motos); $i++) {
-            $infoMotos .= $motos[$i] . "\n";
-        }
-        if ($infoMotos == "") {
-            $infoMotos = "No hay motos registradas.\n";
+        $info .= "\n🏍️ MOTOS:\n";
+        foreach ($this->getColeccionMotos() as $moto) {
+            $info .= $moto . "\n";
         }
     
-        $infoVentas = "";
-        $ventas = $this->getColeccionVentas();
-        for ($i = 0; $i < count($ventas); $i++) {
-            $infoVentas .= $ventas[$i] . "\n";
-        }
-        if ($infoVentas == "") {
-            $infoVentas = "No hay ventas realizadas.\n";
+        $info .= "\n🧾 VENTAS:\n";
+        foreach ($this->getColeccionVentas() as $venta) {
+            $info .= $venta . "\n";
         }
     
-        return "🏢 Empresa\n" .
-               "Denominación: " . $this->getDenominacion() . "\n" .
-               "Dirección: " . $this->getDireccion() . "\n\n" .
-               "📋 Clientes:\n" . $infoClientes . "\n" .
-               "🏍️ Motos:\n" . $infoMotos . "\n" .
-               "🧾 Ventas:\n" . $infoVentas;
+        return $info;
     }
     
 
 	// RETORNAR MOTO
 
     public function retornarMoto($codigoMoto){
-        $elementos = count($this-> getColeccionMotos());
+        $elementos = count($this->getColeccionMotos());
         $i = 0;
         $encontrado = false;
-        while ($encontrado != true && $i < $elementos) {
-            if ($codigoMoto == $this-> getColeccionMotos()[$i]->getCodigo()) {
-                $moto = $this -> getColeccionMotos()[$i];
-            }
-            else {
-                $moto = null;
+        $moto = null;
+        while (!$encontrado && $i < $elementos) {
+            if ($codigoMoto == $this->getColeccionMotos()[$i]->getCodigo()) {
+                $moto = $this->getColeccionMotos()[$i];
+                $encontrado = true;
             }
             $i++;
         }
         return $moto;
     }
+    
    
     // REGISTRAR VENTA
 
     public function registrarVenta($colCodigosMoto, $objCliente) {
-        // Verificar si el cliente está dado de baja (asumiendo método getEstado())
         if ($objCliente->getEstado() == "baja") {
-            return 0; // Cliente no puede comprar
+            return 0;
         }
     
         $objVenta = new Venta(random_int(0, 1000), date("Y-m-d"), $objCliente, [], 0);
+        $seAgregoAlMenosUna = false;
     
-        $elementos = count($colCodigosMoto);
-    
-        for ($i = 0; $i < $elementos; $i++) {
+        for ($i = 0; $i < count($colCodigosMoto); $i++) {
             $codigo = $colCodigosMoto[$i];
-            $moto = $this->retornarMoto($codigo); // Método que busca una moto por su código
+            $moto = $this->retornarMoto($codigo);
     
             if ($moto !== null && $moto->getActiva()) {
-                $objVenta->incorporarMoto($moto);
-                $ventas = $this->getColeccionVentas();
-                $ventas[] = $objVenta;
-                $this->setColeccionVentas($ventas);
+                $exito = $objVenta->incorporarMoto($moto);
+                if ($exito) {
+                    $seAgregoAlMenosUna = true;
+                }
             }
         }
     
-        // Retornamos el importe final de la venta
+        if ($seAgregoAlMenosUna) {
+            $ventas = $this->getColeccionVentas();
+            $ventas[] = $objVenta;
+            $this->setColeccionVentas($ventas);
+        }
+    
         return $objVenta->getPrecioFinal();
     }
+    
 
     // REOTNAR VENTAS POR CLIENTE
 

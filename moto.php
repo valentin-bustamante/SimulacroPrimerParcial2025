@@ -55,24 +55,24 @@ class Moto{
 	// toString
 
     public function __toString() {
-        $estado = $this->getActiva() ? "Disponible para la venta" : "No disponible para la venta";
+        $estado = $this->getActiva() ? "🟢 Disponible" : "🔴 No disponible";
     
-        return "📌 Moto:\n" .
-               "Código: " . $this->getCodigo() . "\n" .
-               "Descripción: " . $this->getDescripcion() . "\n" .
-               "Año de fabricación: " . $this->getAnioFabricacion() . "\n" .
-               "Costo: $" . $this->getCosto() . "\n" .
-               "Incremento anual: " . ($this->getIncremento() * 100) . "%\n" .
-               "Estado: " . $estado . "\n";
+        return "─────────────── Moto ─────────────────\n" .
+               "🔢 Código:             " . $this->getCodigo() . "\n" .
+               "📝 Descripción:        " . $this->getDescripcion() . "\n" .
+               "📅 Año fabricación:    " . $this->getAnioFabricacion() . "\n" .
+               "💸 Costo:              $" . $this->getCosto() . "\n" .
+               "📈 Incremento anual:   " . $this->getIncremento() . "%\n" .
+               "⚙️ Estado:             " . $estado . "\n" .
+               "──────────────────────────────────────\n";
     }
     
-
     // DAR PRECIO VENTA
 
     public function darPrecioVenta(){
         $venta = -1;
         if ($this->getActiva() == true) {
-            $venta = $this-> getCosto() + ($this-> getCosto() * ((date("Y") - $this-> getAnioFabricacion())* $this-> getIncremento()));
+            $venta = $this-> getCosto() + ($this-> getCosto() * ((date("Y") - $this-> getAnioFabricacion())* $this-> getIncremento())/100);
         }
         return $venta;
     }

@@ -47,23 +47,20 @@ class Venta{
 
     public function __toString() {
         $infoMotos = "";
-        $motos = $this->getRefMotos();
-        $cantMotos = count($motos);
-    
-        for ($i = 0; $i < $cantMotos; $i++) {
-            $infoMotos .= $motos[$i] . "\n";
+        foreach ($this->getRefMotos() as $moto) {
+            $infoMotos .= $moto . "\n";
         }
     
-        if ($infoMotos == "") {
-            $infoMotos = "No hay motos asociadas a esta venta.\n";
+        if ($infoMotos === "") {
+            $infoMotos = "❌ No hay motos asociadas a esta venta.\n";
         }
     
-        return "📄 Venta:\n" .
-               "Número: " . $this->getNumero() . "\n" .
-               "Fecha: " . $this->getFecha() . "\n" .
-               "Cliente:\n" . $this->getRefCliente() . "\n" .
-               "Motos vendidas:\n" . $infoMotos .
-               "💰 Precio final: $" . $this->getPrecioFinal() . "\n";
+        return "═══════════════ VENTA N° " . $this->getNumero() . " ═══════════════\n" .
+               "📅 Fecha: " . $this->getFecha() . "\n\n" .
+               "🧍‍♂️ Cliente:\n" . $this->getRefCliente() . "\n" .
+               "🏍️ Motos vendidas:\n" . $infoMotos .
+               "💰 Precio final: $" . $this->getPrecioFinal() . "\n" .
+               "══════════════════════════════════════════════════════\n";
     }
     
 

@@ -43,13 +43,19 @@ class Cliente{
     //otros metodos
 
     public function __toString() {
-        $estado = $this->getEstado() ? "🟥 Dado de baja" : "🟩 Activo";
+        $estado = match ($this->getEstado()) {
+            "baja" => "🟥 Dado de baja",
+            "alta" => "🟩 Activo",
+            default => "⚠️ Estado desconocido"
+        };
     
-        return "📌 Cliente:\n" .
-               "Nombre: " . $this->getNombre() . " " . $this->getApellido() . "\n" .
-               "Documento: " . $this->getTipoDoc() . " " . $this->getNumeroDoc() . "\n" .
-               "Estado: " . $estado . "\n";
+        return "─────────────── Cliente ───────────────\n" .
+               "👤 Nombre:     " . $this->getNombre() . " " . $this->getApellido() . "\n" .
+               "🆔 Documento:  " . $this->getTipoDoc() . " " . $this->getNumeroDoc() . "\n" .
+               "📌 Estado:     " . $estado . "\n" .
+               "──────────────────────────────────────\n";
     }
+    
     
 
 
